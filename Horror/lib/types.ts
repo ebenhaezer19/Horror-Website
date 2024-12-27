@@ -5,4 +5,6 @@ export interface Artwork {
   description: string;
   image: string;
   iconName: IconName;
+  link?: string;
+  category?: string;
 }
