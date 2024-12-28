@@ -93,18 +93,22 @@ export default function AdminGallery() {
       const galleryList = await response.json();
       
       // Update galleries state with the actual directories
-      const updatedGalleries = [...new Set([...galleries, ...galleryList])];
-      setGalleries(updatedGalleries);
-      localStorage.setItem('galleries', JSON.stringify(updatedGalleries));
+      const combinedGalleries = [...galleries, ...galleryList];
+      const uniqueGalleries = combinedGalleries.filter((gallery, index) => 
+        combinedGalleries.indexOf(gallery) === index
+      );
+      
+      setGalleries(uniqueGalleries);
+      localStorage.setItem('galleries', JSON.stringify(uniqueGalleries));
 
       // Load images for each gallery
-      for (const gallery of updatedGalleries) {
+      for (const gallery of uniqueGalleries) {
         const artworksInGallery = artworkList.filter(art => art.category === gallery);
         images[gallery] = artworksInGallery.map(art => art.image);
       }
 
       setGalleryImages(images);
-      console.log('Loaded galleries:', updatedGalleries);
+      console.log('Loaded galleries:', uniqueGalleries);
       console.log('Loaded images:', images);
     } catch (err) {
       console.error('Error loading gallery images:', err);
