@@ -5,6 +5,7 @@ import { Navbar } from '@/components/navigation/Navbar';
 import { CustomCursor } from '@/components/ui/CustomCursor';
 import { VideoBackground } from '@/components/ui/VideoBackground';
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Footer } from '@/components/Footer';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -43,6 +44,7 @@ export default function RootLayout({
           {children}
         </main>
         <SpeedInsights />
+        <Footer />
       </body>
     </html>
   );

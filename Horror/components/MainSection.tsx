@@ -10,6 +10,19 @@ export function MainSection() {
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       <CreepyBackground />
       
+      {/* Light effect - hidden on mobile */}
+      <motion.div
+        className="absolute inset-0 bg-red-500/20 blur-3xl hidden md:block"
+        animate={{
+          opacity: [0.2, 0.4, 0.2],
+        }}
+        transition={{
+          duration: 4,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
+      
       <div className="relative grid place-items-center gap-8 px-4">
         <motion.div
           initial={{ opacity: 0, scale: 0.5 }}
@@ -18,17 +31,6 @@ export function MainSection() {
           className="relative"
         >
           <FloatingGhost />
-          <motion.div
-            className="absolute inset-0 bg-red-500/20 blur-3xl"
-            animate={{
-              opacity: [0.2, 0.4, 0.2],
-            }}
-            transition={{
-              duration: 4,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          />
         </motion.div>
 
         <div className="text-center space-y-4">

@@ -1,47 +1,29 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState } from "react";
 
 export function CustomCursor() {
   const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [isMoving, setIsMoving] = useState(false);
-
-  const throttledSetPosition = useCallback((e: MouseEvent) => {
-    requestAnimationFrame(() => {
-      setPosition({ x: e.clientX, y: e.clientY });
-      setIsMoving(true);
-      setTimeout(() => setIsMoving(false), 100);
-    });
-  }, []);
 
   useEffect(() => {
-    window.addEventListener('mousemove', throttledSetPosition);
-    return () => {
-      window.removeEventListener('mousemove', throttledSetPosition);
+    const updatePosition = (e: MouseEvent) => {
+      setPosition({ x: e.clientX, y: e.clientY });
     };
-  }, [throttledSetPosition]);
+
+    window.addEventListener("mousemove", updatePosition);
+    return () => window.removeEventListener("mousemove", updatePosition);
+  }, []);
 
   return (
-    <>
-      {/* Main flashlight effect */}
-      <div
-        className="flashlight"
-        style={{
-          left: `${position.x}px`,
-          top: `${position.y}px`,
-          transform: `translate(-50%, -50%) ${isMoving ? 'scale(1.05)' : 'scale(1)'}`,
-          transition: 'transform 0.2s ease-out'
-        }}
-      />
-      {/* Minimal cursor indicator */}
-      <div
-        className={`custom-cursor ${isMoving ? 'moving' : ''}`}
-        style={{
-          left: `${position.x}px`,
-          top: `${position.y}px`,
-          transform: `translate(-50%, -50%)`
-        }}
-      />
-    </>
+    <div
+      className="hidden md:block fixed w-32 h-32 pointer-events-none z-50"
+      style={{
+        left: position.x - 64,
+        top: position.y - 64,
+        background: "radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 50%, transparent 70%)",
+        transform: "translate(0, 0)",
+        transition: "transform 0.1s ease-out, opacity 0.2s ease-out",
+      }}
+    />
   );
 } 
