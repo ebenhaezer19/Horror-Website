@@ -1,37 +1,29 @@
-'use client';
+import { NextResponse } from 'next/server';
+import fs from 'fs';
+import path from 'path';
+
+export async function POST(request: Request) {
+  try {
+    const { gallery } = await request.json();
+    const galleryDir = path.join(process.cwd(), 'app', 'gallery', gallery);
+    const pageFilePath = path.join(galleryDir, 'page.tsx');
+
+    // Create gallery directory if it doesn't exist
+    if (!fs.existsSync(galleryDir)) {
+      fs.mkdirSync(galleryDir, { recursive: true });
+    }
+
+    // Generate gallery page content
+    const pageContent = `'use client';
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { artworks } from '@/lib/data';
 import { ImageLoader } from '@/components/ui/ImageLoader';
 
-const echoesGallery = [
-  {
-    id: 1,
-    title: "Primal Fear",
-    image: "/images/gallery/echoes-of-fear/1.jpg",
-    description: "Deep within our DNA lies the memory of ancient terrors"
-  },
-  {
-    id: 2,
-    title: "Echoing Madness",
-    image: "/images/gallery/echoes-of-fear/2.jpg",
-    description: "The resonance of fear bouncing through the corridors of sanity"
-  },
-  {
-    id: 3,
-    title: "Psychosis",
-    image: "/images/gallery/Psycho.png",
-    description: "When reality itself becomes the source of terror"
-  },
-  {
-    id: 4,
-    title: "The Reflection",
-    image: "/images/gallery/echoes-of-fear/3.jpg",
-    description: "In every mirror lies a gateway to our darkest fears"
-  }
-];
+const ${gallery.split('-').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1)).join('')}Gallery = artworks.filter(art => art.category === '${gallery}');
 
-export default function EchoesOfFearGallery() {
+export default function ${gallery.split('-').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1)).join('')}Page() {
   return (
     <div className="min-h-screen bg-black py-12 px-4">
       <motion.div 
@@ -54,7 +46,7 @@ export default function EchoesOfFearGallery() {
             >
               ←
             </motion.span>
-            <span className="text-sm group-hover:underline">Escape the Echoes</span>
+            <span className="text-sm group-hover:underline">Escape the ${gallery.split('-').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}</span>
           </Link>
         </motion.div>
 
@@ -63,7 +55,7 @@ export default function EchoesOfFearGallery() {
           animate={{ y: 0 }}
           className="text-5xl font-bold text-red-600 mb-8 text-center"
         >
-          Echoes of Fear
+          ${gallery.split('-').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
         </motion.h1>
         
         <motion.p 
@@ -71,13 +63,13 @@ export default function EchoesOfFearGallery() {
           animate={{ opacity: 1 }}
           className="text-gray-400 text-center mb-12 max-w-2xl mx-auto"
         >
-          A collection that explores the deepest recesses of human consciousness, where primal fears echo through time.
+          A collection that explores the depths of horror and fear through haunting imagery and dark atmosphere.
         </motion.p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {echoesGallery.map((item, index) => (
+          {${gallery.split('-').map((word: string) => word.charAt(0).toUpperCase() + word.slice(1)).join('')}Gallery.map((item, index) => (
             <motion.div
-              key={item.id}
+              key={item.title}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -111,7 +103,7 @@ export default function EchoesOfFearGallery() {
           className="mt-12 text-center"
         >
           <p className="text-red-500 text-sm italic">
-            "Fear doesn't die, it merely echoes through generations..."
+            "Fear takes many forms, each more terrifying than the last..."
           </p>
         </motion.div>
 
@@ -132,4 +124,24 @@ export default function EchoesOfFearGallery() {
       </motion.div>
     </div>
   );
+}
+`;
+
+    // Write the page file
+    fs.writeFileSync(pageFilePath, pageContent);
+
+    return NextResponse.json({ 
+      success: true,
+      message: 'Gallery page created successfully'
+    });
+  } catch (error) {
+    console.error('Error creating gallery page:', error);
+    return NextResponse.json(
+      { 
+        error: 'Failed to create gallery page',
+        details: error instanceof Error ? error.message : String(error)
+      },
+      { status: 500 }
+    );
+  }
 } 

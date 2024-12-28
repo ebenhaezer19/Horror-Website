@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google';
 import { Navbar } from '@/components/navigation/Navbar';
 import { CustomCursor } from '@/components/ui/CustomCursor';
 import { VideoBackground } from '@/components/ui/VideoBackground';
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -11,8 +12,9 @@ export const metadata: Metadata = {
   title: 'Horror Gallery',
   description: 'Exploring the depths of human consciousness through dark art',
   icons: {
-    icon: '/favicon.ico',
-    apple: '/apple-touch-icon.png',
+    icon: '/icons/logo.ico',
+    shortcut: '/icons/logo.ico',
+    apple: '/icons/logo.ico',
   },
 };
 
@@ -40,6 +42,7 @@ export default function RootLayout({
         <main className="pt-16">
           {children}
         </main>
+        <SpeedInsights />
       </body>
     </html>
   );

@@ -14,8 +14,11 @@ const nextConfig = {
   },
   webpack: (config) => {
     config.module.rules.push({
-      test: /\.(ico|png|svg)$/,
-      type: 'asset/resource'
+      test: /\.ico$/,
+      type: 'asset/resource',
+      generator: {
+        filename: 'static/[path][name][ext]'
+      }
     });
     return config;
   }
